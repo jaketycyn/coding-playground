@@ -1,0 +1,9 @@
+{
+  "id": "1-two-sum",
+  "title": "Two Sum",
+  "difficulty": "Easy",
+  "problemNumber": 1,
+  "categories": ["Array", "Hash Table"],
+  "timeComplexity": "O(n)",
+  "spaceComplexity": "O(n)"
+}
