@@ -1,131 +1,166 @@
-# ADR-001: Project Folder Structure
-
-- Status: Proposed
-- Date: [2025-01-27]
-- Deciders: [Jake TyCyn Schmidt]
+# ADR-001: Coding Playground Project Structure
+- Status: Accepted
+- Date: [2025-01-28]
+- Deciders: Jake TyCyn Schmidt
 
 ## Context and Problem Statement
 
-The application needs a clear and scalable structure for organizing UI components, backend API calls, & any future libraries or other implementations as we scale.
+The Coding Playground application needs a clear and maintainable structure for organizing different types of content including LeetCode solutions, learning resources, tools, and blog posts. The structure should make it easy to add new content while maintaining clear separation between different sections.
 
 ## Decision Drivers
 
-- Need to maintain clear separation between front and backend
-- Need to distinguish between app-wide and feature-specific components
-- Want to follow Typesafety conventions & best practices
-- Want to make it easy for new developers to understand where components belong & where they can easily add features to while not creating redundant feature.
+- Need to maintain clear organization of different LeetCode problems and their solutions
+- Want to separate utility tools from learning resources
+- Need to support a blog/diary section for documenting learning journey
+- Want to make it easy to find specific solutions and resources
+- Need to maintain type safety across the application
+- Want to follow Next.js best practices for routing and component organization
 
 ## Decision
 
-We will organize components in a hierarchical structure that clearly separates different types of components based on their scope and reusability:
+We will organize the project using the following structure:
 
 ```
 src/
 ├── app/                                # Next.js app directory
 │   ├── page.tsx                       # Home page
 │   ├── layout.tsx                     # Root layout
-│   ├── _components/                   # Shared components across app routes
+│   ├── _components/                   # Shared components
 │   │   ├── layout/
-│   │   │   ├── Header/               # Site header with navigation
-│   │   │   ├── Footer/               # Site footer
-│   │   │   └── Sidebar/              # Optional sidebar for member areas
+│   │   │   ├── Header/               # Site navigation
+│   │   │   ├── Footer/
+│   │   │   └── Sidebar/              # Problem categories, tags
 │   │   └── shared/
-│   │       ├── EventCard/            # Reusable event display component
-│   │       ├── MemberCard/           # Member profile display component
-│   │       └── ProjectShowcase/      # Project display component
+│   │       ├── CodeBlock/            # Syntax highlighted code display
+│   │       ├── ComplexityBadge/      # Time/Space complexity indicator
+│   │       └── SolutionCard/         # Solution preview card
 │   │
-│   ├── events/                       # Events section
-│   │   ├── page.tsx                  # Events listing page
-│   │   ├── [eventId]/               # Dynamic event pages
+│   ├── leetcode/                      # LeetCode problems section
+│   │   ├── page.tsx                  # Problems listing
+│   │   ├── [problemId]/             # Individual problem pages
 │   │   │   └── page.tsx
-│   │   └── _components/             # Event-specific components
-│   │       ├── EventCalendar/
-│   │       └── EventRegistration/
+│   │   └── _components/             
+│   │       ├── ProblemDescription/
+│   │       ├── SolutionTabs/         # Toggle between TS/Python
+│   │       └── TestCases/
 │   │
-│   ├── projects/                     # Projects section
-│   │   ├── page.tsx                  # Projects listing page
-│   │   ├── [projectId]/             # Individual project pages
+│   ├── tools/                        # Utility tools section
+│   │   ├── page.tsx                  # Tools listing
+│   │   ├── calculator/              
 │   │   │   └── page.tsx
-│   │   └── _components/             # Project-specific components
-│   │       ├── ProjectGallery/
-│   │       └── ProjectSubmission/
-│   │
-│   ├── members/                      # Members section
-│   │   ├── page.tsx                  # Members directory
-│   │   ├── [memberId]/              # Member profiles
+│   │   ├── calendar/
 │   │   │   └── page.tsx
-│   │   └── _components/             # Member-specific components
-│   │       ├── MemberDirectory/
-│   │       └── ProfileEditor/
+│   │   └── _components/
+│   │       ├── ToolCard/
+│   │       └── [tool-specific]/
 │   │
-│   └── resources/                    # Learning resources section
-│       ├── page.tsx                  # Resources landing page
-│       ├── [categoryId]/            # Resource categories
+│   ├── learn/                        # Learning resources
+│   │   ├── page.tsx                  # Resources landing
+│   │   ├── algorithms/              # Algorithm concepts
+│   │   │   └── page.tsx
+│   │   ├── data-structures/
+│   │   │   └── page.tsx
+│   │   └── _components/
+│   │       ├── ConceptCard/
+│   │       └── ResourceList/
+│   │
+│   └── blog/                         # Coding diary/blog
+│       ├── page.tsx                  # Blog listing
+│       ├── [postId]/                # Individual posts
 │       │   └── page.tsx
-│       └── _components/             # Resource-specific components
-│           ├── ResourceCard/
-│           └── TutorialViewer/
+│       └── _components/
+│           ├── PostCard/
+│           └── TagCloud/
 │
-├── lib/                              # Shared utilities and helpers
-│   ├── types/                        # TypeScript type definitions
-│   │   ├── event.types.ts
-│   │   ├── member.types.ts
-│   │   └── project.types.ts
+├── lib/                              # Shared utilities
+│   ├── types/                       
+│   │   ├── leetcode.types.ts        # Problem/Solution types
+│   │   ├── tools.types.ts
+│   │   └── blog.types.ts
 │   │
-│   ├── utils/                        # Utility functions
-│   │   ├── date-helpers.ts
-│   │   └── validation.ts
+│   ├── utils/                        
+│   │   ├── code-formatter.ts        # Code formatting utilities
+│   │   ├── complexity-parser.ts     # Parse Big O notation
+│   │   └── markdown.ts             # Blog post processing
 │   │
-│   └── constants/                    # App-wide constants
+│   └── constants/                    
 │       ├── routes.ts
-│       └── config.ts
+│       └── categories.ts            # Problem categories
 │
-├── styles/                           # Global styles
-│   ├── globals.scss
-│   └── variables.scss
+├── content/                          # Markdown content
+│   ├── leetcode/                    # Problem descriptions
+│   ├── blog/                       # Blog posts
+│   └── learn/                      # Learning resources
 │
-└── public/                           # Static assets
-    ├── images/
-    │   ├── logo.svg
-    │   └── icons/
-    └── fonts/
+└── public/                           
+    └── images/
+        ├── problems/                # Problem-specific diagrams
+        └── blog/                    # Blog post images
 ```
 
 ## Key Features and Organization
 
-### App Routes
+### Main Sections
 
-- **Events**: Manages club meetings, workshops, and competitions
-- **Projects**: Showcases member projects and collaborative work
-- **Members**: Directory and profiles for club members
-- **Resources**: Learning materials, tutorials, and coding resources
+1. **LeetCode Problems** (`/leetcode`)
+   - Individual problem pages with descriptions
+   - Multiple solution implementations (TS/Python)
+   - Time/Space complexity analysis
+   - Test cases and examples
+
+2. **Tools** (`/tools`)
+   - Simple utility applications
+   - Interactive demonstrations
+   - Practical coding examples
+
+3. **Learning Resources** (`/learn`)
+   - Algorithm explanations
+   - Data structure concepts
+   - Programming patterns
+   - Study guides
+
+4. **Blog/Coding Diary** (`/blog`)
+   - Learning journey documentation
+   - Problem-solving approaches
+   - Technical discoveries
+   - Study progress
 
 ### Component Organization
 
-1. **App Components** (`app/_components/`)
-   - Layout components for consistent site structure
-   - Shared components used across multiple routes
-2. **UI Components** (`components/ui/`)
-   - shadcn component library integration
-   - Consistent design system implementation
-3. **Shared Components** (`components/shared/`)
-   - Reusable utility components
-   - Common interface elements
+1. **Shared Components** (`app/_components/`)
+   - Code display and syntax highlighting
+   - Navigation and layout elements
+   - Reusable cards and lists
+
+2. **Section-Specific Components**
+   - Problem-specific visualizations
+   - Tool-specific interfaces
+   - Blog post formatting
+
+### Content Management
+
+- Markdown files for problem descriptions and blog posts
+- Separate content directory for easier management
+- Clear separation of content and presentation
 
 ### Type Safety
 
-- Dedicated types directory for TypeScript definitions
-- Separate type files for each major feature
-- Shared interfaces and utility types
+- Comprehensive type definitions for all features
+- Shared interfaces for common patterns
+- Strong typing for problem solutions
 
-### Styling
+## Consequences
 
-- Global SCSS for site-wide styles
-- Tailwind utility classes for component-specific styling
-- shadcn components for consistent UI elements
+### Positive
 
-### Assets
+- Clear organization of different content types
+- Easy to add new problems and solutions
+- Scalable structure for blog posts
+- Maintainable separation of concerns
+- Type-safe implementation
 
-- Organized public directory for static assets
-- Separate directories for images, icons, and fonts
-- Easy access to frequently used media
+### Negative
+
+- More complex folder structure
+- Need to maintain consistency across sections
+- Regular updates required for learning content
