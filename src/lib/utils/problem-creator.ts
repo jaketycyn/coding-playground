@@ -1,15 +1,45 @@
 import path from "path";
 import fs from "fs/promises";
+import { CreateProblemProps } from "@/app/actions/create-problem";
+
+/**
+ * Formats a problemID & title into a url-friendly string
+ * @param problemId - The problem ID (e.g. '234')
+ * @returns problemTitle - The problem title (e.g. 'Palindrome Linked List')
+ * @returns string - Formatted as 'id-noramalized-title' (e.g. '234-palindrome-linked-list')
+ */
+
+function formatProblemIdentifier({
+  problemId,
+  problemTitle,
+}: CreateProblemProps): string {
+  // Remove any special characters with spaces & convert to lowercase
+  const normalizedTitle = problemTitle
+    .toLowerCase()
+    // Replace special characters with spaces
+    .replace(/[^a-zA-Z0-9\s]/g, " ")
+    // Replace multiple spaces with single space
+    .replace(/\s+/g, " ")
+    // Trim spaces from start and end
+    .trim()
+    // Replace spaces with hyphens
+    .replace(/\s/g, "-");
+
+  return `${problemId}-${normalizedTitle}`;
+}
 
 /**
  * Creates a new problem directory from a template
  * @param problemId - The identifier for the new problem (e.g., 'two-sum')
  * @returns Promise<boolean> - true if successful, false otherwise
  */
-export async function createProblemFromTemplate(
-  problemId: string
-): Promise<boolean> {
+export async function createProblemFromTemplate({
+  problemId,
+  problemTitle,
+}: CreateProblemProps): Promise<boolean> {
   try {
+    const formatedId = formatProblemIdentifier({ problemId, problemTitle });
+
     // Define the paths we'll be working with
     const contentDir = path.join(process.cwd(), "content", "leetcode");
     const templateDir = path.join(
@@ -18,13 +48,14 @@ export async function createProblemFromTemplate(
       "leetcode",
       "_template"
     );
-    const newProblemDir = path.join(contentDir, problemId);
+    const newProblemDir = path.join(contentDir, formatedId);
 
     // Debug logging
     console.log("Creating new problem:", {
       contentDir,
       templateDir,
       newProblemDir,
+      formatedId,
     });
 
     // Verify template directory exists
@@ -54,8 +85,17 @@ export async function createProblemFromTemplate(
      * Helper function to recursively copy a directory and its contents
      * @param src - Source directory path
      * @param dest - Destination directory path
+     * @param formattedId - string - Formatted as 'id-normalized-title' (e.g. '234-palindrome-linked-list')
+     * @param problemId - The problem ID (e.g. '234')
+     * @param problemTitle - The problem title (e.g. 'Palindrome Linked List')
      */
-    async function copyDir(src: string, dest: string) {
+    async function copyDir(
+      src: string,
+      dest: string,
+      formattedId: string,
+      problemId: string,
+      problemTitle: string
+    ) {
       // Create the destination directory
       await fs.mkdir(dest, { recursive: true });
 
@@ -71,7 +111,13 @@ export async function createProblemFromTemplate(
 
         if (entry.isDirectory()) {
           // If it's a directory, recursively copy it
-          await copyDir(srcPath, destPath);
+          await copyDir(
+            srcPath,
+            destPath,
+            formattedId,
+            problemId,
+            problemTitle
+          );
         } else {
           // If it's a file, copy it directly
           await fs.copyFile(srcPath, destPath);
@@ -80,17 +126,39 @@ export async function createProblemFromTemplate(
           // Update timestamps in metadata if applicable
           if (entry.name === "metadata.json") {
             const metadata = JSON.parse(await fs.readFile(destPath, "utf-8"));
-            metadata.timestamps.created = new Date().toISOString();
-            metadata.timestamps.lastUpdated = new Date().toISOString();
-            await fs.writeFile(destPath, JSON.stringify(metadata, null, 2));
+            const updatedMetadata = {
+              ...metadata,
+              id: formattedId,
+              title: problemTitle,
+              problemNumber: parseInt(problemId),
+              timestamps: {
+                created: new Date().toISOString(),
+                lastUpdated: new Date().toISOString(),
+              },
+            };
+
+            // Write updated metadata back to file
+            await fs.writeFile(
+              destPath,
+              JSON.stringify(updatedMetadata, null, 2)
+            );
+
+            // Debug logging
+            console.log("Updated metadata:", updatedMetadata);
           }
         }
       }
     }
 
     // Copy template to new problem directory
-    await copyDir(templateDir, newProblemDir);
-    console.log("Successfully created problem:", problemId);
+    await copyDir(
+      templateDir,
+      newProblemDir,
+      formatedId,
+      problemId,
+      problemTitle
+    );
+    console.log("Successfully created problem:", formatedId);
     return true;
   } catch (error) {
     console.error("Error creating problem:", error);
@@ -101,18 +169,21 @@ export async function createProblemFromTemplate(
 /**
  * Verifies that a leetcode problem was created correctly with all required files
  * @param problemId - The identifier of the problem to verify
+ * @param problemTitle - The title of the problem to verify
  * @returns Promise<boolean> - true if the problem is valid, false otherwise
  */
 
-export async function verifyProblemCreation(
-  problemId: string
-): Promise<boolean> {
+export async function verifyProblemCreation({
+  problemId,
+  problemTitle,
+}: CreateProblemProps): Promise<boolean> {
   try {
+    const formattedId = formatProblemIdentifier({ problemId, problemTitle });
     const problemDir = path.join(
       process.cwd(),
       "content",
       "leetcode",
-      problemId
+      formattedId
     );
 
     // Check if main problem directory exists
@@ -165,14 +236,18 @@ export async function verifyProblemCreation(
 
       // Check required metadata fields
       const requiredMetadataFields = [
+        "id",
         "title",
         "difficulty",
-        "category",
-        "topics",
-        "companies",
-        "links",
+        "problemNumber",
+        "categories",
+        "timeComplexity",
+        "spaceComplexity",
         "timestamps",
       ];
+
+      // Separate check for the required timestamp fields
+      const requiredTimestampFields = ["created", "lastUpdated"];
 
       const missingFields = requiredMetadataFields.filter(
         (field) => !(field in metadata)
@@ -191,6 +266,24 @@ export async function verifyProblemCreation(
 
       if (!problemMd.trim()) {
         console.error("Problem.md is empty");
+        return false;
+      }
+
+      // Verify timestamps structure
+      if ("timestamps" in metadata) {
+        const missingTimestampFields = requiredTimestampFields.filter(
+          (field) => !(field in metadata.timestamps)
+        );
+
+        if (missingTimestampFields.length > 0) {
+          console.error(
+            "Missing required timestamp fields:",
+            missingTimestampFields
+          );
+          return false;
+        }
+      } else {
+        console.error("Missing timestamps field in metadata");
         return false;
       }
 
