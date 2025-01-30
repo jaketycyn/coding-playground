@@ -1,0 +1,16 @@
+{
+  "id": "13-roman-to-integer",
+  "title": "Roman to Integer",
+  "difficulty": "Easy",
+  "problemNumber": 13,
+  "categories": [
+    "someCategory",
+    "someOtherCategory"
+  ],
+  "timeComplexity": "O(n)",
+  "spaceComplexity": "O(n)",
+  "timestamps": {
+    "created": "2025-01-30T03:07:29.470Z",
+    "lastUpdated": "2025-01-30T03:07:29.470Z"
+  }
+}
