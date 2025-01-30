@@ -17,6 +17,7 @@ interface FormStatus {
 export default function NewProblemForm() {
   // State management for form
   const [problemId, setProblemId] = useState("");
+  const [problemTitle, setProblemTitle] = useState("");
   const [status, setStatus] = useState<FormStatus>({ loading: false });
 
   /**
@@ -30,7 +31,7 @@ export default function NewProblemForm() {
 
     try {
       // Call the server action
-      const result = await createProblem(problemId);
+      const result = await createProblem({ problemId, problemTitle });
 
       if (result.success) {
         // Reset form and show success message
@@ -55,7 +56,7 @@ export default function NewProblemForm() {
     >
       <div>
         <label htmlFor="problemId" className="block text-sm font-medium">
-          Problem ID
+          #
         </label>
         <input
           type="text"
@@ -64,6 +65,18 @@ export default function NewProblemForm() {
           onChange={(e) => setProblemId(e.target.value)}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black text-xl font-semiBold pl-2"
           placeholder="problem-id"
+          disabled={status.loading}
+        />
+        <label htmlFor="problemId" className="block text-sm font-medium">
+          Title
+        </label>
+        <input
+          type="text"
+          id="problemTitle"
+          value={problemTitle}
+          onChange={(e) => setProblemTitle(e.target.value)}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm text-black text-xl font-semiBold pl-2"
+          placeholder="problem-title"
           disabled={status.loading}
         />
       </div>

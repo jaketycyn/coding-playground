@@ -37,7 +37,7 @@ export default async function LeetCodePage() {
             <Card className="hover:bg-gray-50 text-black">
               <CardHeader className="flex items-center justify-between">
                 <CardTitle>
-                  <span>#{problem.problemNumber}</span>
+                  <span className="mr-2">#{problem.problemNumber}</span>
                   {problem.title}
                 </CardTitle>
               </CardHeader>
