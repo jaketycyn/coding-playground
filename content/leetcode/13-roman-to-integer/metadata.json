@@ -3,10 +3,7 @@
   "title": "Roman to Integer",
   "difficulty": "Easy",
   "problemNumber": 13,
-  "categories": [
-    "someCategory",
-    "someOtherCategory"
-  ],
+  "categories": ["Array", "NestedLoop"],
   "timeComplexity": "O(n)",
   "spaceComplexity": "O(n)",
   "timestamps": {

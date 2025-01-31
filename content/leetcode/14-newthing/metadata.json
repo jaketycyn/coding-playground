@@ -1,0 +1,16 @@
+{
+  "id": "14-newthing",
+  "title": "newthing",
+  "difficulty": "Easy",
+  "problemNumber": 14,
+  "categories": [
+    "someCategory",
+    "someOtherCategory"
+  ],
+  "timeComplexity": "O(n)",
+  "spaceComplexity": "O(n)",
+  "timestamps": {
+    "created": "2025-01-30T08:38:04.961Z",
+    "lastUpdated": "2025-01-30T08:38:04.961Z"
+  }
+}

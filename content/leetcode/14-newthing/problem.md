@@ -1,3 +1,5 @@
+## Difficulty: [Easy/Medium/Hard]
+
 ## Problem Description
 
 [Detailed problem statement goes here]
