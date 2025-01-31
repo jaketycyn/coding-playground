@@ -5,15 +5,25 @@ export interface Solution {
   timeComplexity: string;
   spaceComplexity: string;
 }
-
 export interface LeetCodeProblem {
   id: string;
   title: string;
   difficulty: "Easy" | "Medium" | "Hard";
   problemNumber: number;
-  categories: string[]; // could be made into its own type later
+  categories: string[];
+  description: string; // Added for problem.md content
   solutions: {
-    typescript?: Solution[];
+    typescript: Solution[];
     python: Solution[];
   };
+}
+
+export interface ProblemMetadata {
+  id: string;
+  title: string;
+  difficulty: "Easy" | "Medium" | "Hard";
+  problemNumber: number;
+  categories: string[];
+  timeComplexity: string;
+  spaceComplexity: string;
 }

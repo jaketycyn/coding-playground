@@ -1,4 +1,8 @@
-import { LeetCodeProblem, Solution } from "../types/leetcode.types";
+import {
+  LeetCodeProblem,
+  ProblemMetadata,
+  Solution,
+} from "../types/leetcode.types";
 import fs from "fs/promises";
 import path from "path";
 
@@ -114,75 +118,81 @@ export async function getProblemsList(): Promise<LeetCodeProblem[]> {
     return [];
   }
 }
-
 export async function getProblemById(
   id: string
 ): Promise<LeetCodeProblem | null> {
   try {
     const contentDir = path.join(process.cwd(), "content", "leetcode");
-    const problemPath = path.join(contentDir, id);
+    let problemPath = path.join(contentDir, id);
+    let matchingDir: string | undefined;
 
     // Check if directory exists
     try {
       await fs.access(problemPath);
     } catch {
-      console.log(`Problem directory ${id} does not exist`);
-      return null;
+      // If direct access fails, try to find a matching directory
+      const allDirs = await fs.readdir(contentDir);
+      matchingDir = allDirs.find((dir) => dir.startsWith(`${id}-`));
+
+      if (!matchingDir) {
+        console.log(`Problem directory ${id} does not exist`);
+        return null;
+      }
+
+      problemPath = path.join(contentDir, matchingDir);
     }
 
     // Read metadata
-    const metadata = JSON.parse(
-      await fs.readFile(path.join(problemPath, "metadata.json"), "utf-8")
+    const metadataPath = path.join(problemPath, "metadata.json");
+    const metadata: ProblemMetadata = JSON.parse(
+      await fs.readFile(metadataPath, "utf-8")
     );
-
-    // Read solutions
-    const solutionsPath = path.join(problemPath, "solutions");
-    let typescriptSolutions: string[] = [];
-    let pythonSolutions: string[] = [];
-
-    try {
-      typescriptSolutions = await fs.readdir(
-        path.join(solutionsPath, "typescript")
-      );
-    } catch {
-      console.log(`No TypeScript solutions for ${id}`);
-    }
-
-    try {
-      pythonSolutions = await fs.readdir(path.join(solutionsPath, "python"));
-    } catch {
-      console.log(`No Python solutions for ${id}`);
-    }
-
-    const solutions = {
-      typescript: await Promise.all(
-        typescriptSolutions.map((file) =>
-          parseSolutionFile(path.join(solutionsPath, "typescript", file))
-        )
-      ),
-      python: await Promise.all(
-        pythonSolutions.map((file) =>
-          parseSolutionFile(path.join(solutionsPath, "python", file))
-        )
-      ),
-    };
 
     // Read problem description
     let description = "";
     try {
-      description = await fs.readFile(
-        path.join(problemPath, "problem.md"),
-        "utf-8"
-      );
+      const descPath = path.join(problemPath, "problem.md");
+      description = await fs.readFile(descPath, "utf-8");
     } catch {
-      console.log(`No problem.md found for ${id}`);
+      console.log(`No problem.md found for ${matchingDir || id}`);
     }
 
-    return {
+    // Read solutions
+    const solutionsPath = path.join(problemPath, "solutions");
+    let typescriptSolutions: Solution[] = [];
+    let pythonSolutions: Solution[] = [];
+
+    try {
+      const tsPath = path.join(solutionsPath, "typescript");
+      const tsFiles = await fs.readdir(tsPath);
+      typescriptSolutions = await Promise.all(
+        tsFiles.map((file) => parseSolutionFile(path.join(tsPath, file)))
+      );
+    } catch (error) {
+      console.log(`No TypeScript solutions for ${matchingDir || id}`);
+    }
+
+    try {
+      const pyPath = path.join(solutionsPath, "python");
+      const pyFiles = await fs.readdir(pyPath);
+      pythonSolutions = await Promise.all(
+        pyFiles.map((file) => parseSolutionFile(path.join(pyPath, file)))
+      );
+    } catch (error) {
+      console.log(`No Python solutions for ${matchingDir || id}`);
+    }
+
+    // Construct the full problem object
+    const problem: LeetCodeProblem = {
       ...metadata,
       description,
-      solutions,
+      solutions: {
+        typescript: typescriptSolutions,
+        python: pythonSolutions,
+      },
     };
+
+    return problem;
   } catch (error) {
     console.error(`Error fetching problem ${id}:`, error);
     return null;
