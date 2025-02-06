@@ -1,6 +1,6 @@
 import { CodeBlock } from "@/app/_components/shared/CodeBlock";
-import { markdownToHtml } from "@/lib/utils/mdx-utils";
-import { getProblemById } from "@/lib/utils/problems";
+import { markdownToHtml } from "@/lib/mdx-utils";
+import { getProblemById } from "@/lib/problems";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 

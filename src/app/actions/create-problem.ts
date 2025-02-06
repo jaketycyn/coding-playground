@@ -3,7 +3,7 @@
 import {
   createProblemFromTemplate,
   verifyProblemCreation,
-} from "@/lib/utils/problem-creator";
+} from "@/lib/problem-creator";
 
 export interface CreateProblemProps {
   problemId: string;

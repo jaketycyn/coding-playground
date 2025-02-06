@@ -1,11 +1,6 @@
-import { getProblemsList } from "@/lib/utils/problems";
+import { getProblemsList } from "@/lib/problems";
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../_components/shared/Card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "../_components/shared/Badges";
 import NewProblemForm from "./_components/NewProblemForm";
 
@@ -34,16 +29,20 @@ export default async function LeetCodePage() {
             className="block transition-colors hover:bg-gray-50"
           >
             {/* Card component later */}
-            <Card className="hover:bg-gray-50 text-black">
+            <Card className="p-6 rounded-lg bg-slate-800 hover:bg-slate-700/80 transition-all duration-300">
               <CardHeader className="flex items-center justify-between">
                 <CardTitle>
                   <span className="mr-2">#{problem.problemNumber}</span>
                   {problem.title}
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="text-slate-300">
                 {problem.categories.map((category) => (
-                  <Badge key={category} variant="outline">
+                  <Badge
+                    key={category}
+                    variant="outline"
+                    className="text-white"
+                  >
                     {category}
                   </Badge>
                 ))}
