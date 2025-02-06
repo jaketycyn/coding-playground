@@ -5,6 +5,7 @@ export interface Solution {
   timeComplexity: string;
   spaceComplexity: string;
 }
+
 export interface LeetCodeProblem {
   id: string;
   title: string;
