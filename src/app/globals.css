@@ -8,6 +8,51 @@ body {
 
 @layer base {
   :root {
+    /* Background and foreground colors using slate */
+    --background: 215 25% 12%;
+    --foreground: 210 40% 98%;
+
+    /* Card and popover elements - slightly lighter than background */
+    --card: 215 25% 14%;
+    --card-foreground: 210 40% 98%;
+    --popover: 215 25% 14%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Primary colors - using a soft blue-slate */
+    --primary: 215 50% 70%;
+    --primary-foreground: 215 25% 12%;
+
+    /* Secondary colors - slightly lighter slate */
+    --secondary: 215 25% 22%;
+    --secondary-foreground: 210 40% 98%;
+
+    /* Muted elements - subtle contrast */
+    --muted: 215 25% 20%;
+    --muted-foreground: 215 20% 75%;
+
+    /* Accent colors - pop of color while maintaining slate theme */
+    --accent: 215 30% 25%;
+    --accent-foreground: 210 40% 98%;
+
+    /* Destructive actions - keeping red but muting slightly */
+    --destructive: 0 65% 35%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Borders and inputs - subtle definition */
+    --border: 215 25% 22%;
+    --input: 215 25% 22%;
+    --ring: 215 35% 45%;
+
+    /* Chart colors - coordinated with slate theme */
+    --chart-1: 215 60% 50%;
+    --chart-2: 200 55% 45%;
+    --chart-3: 230 50% 55%;
+    --chart-4: 245 45% 50%;
+    --chart-5: 260 40% 55%;
+  }
+
+  /* Root/LightMode */
+  .light {
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -33,32 +78,6 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-  }
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
   }
 }
 
