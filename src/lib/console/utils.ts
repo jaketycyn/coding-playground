@@ -12,7 +12,7 @@ export const safeStringify = (value: LoggableValue): string => {
   return String(value);
 };
 
-// create Mock Console with proper typing
+// create Console with proper typing
 export const createMockConsole = (logs: string[]): MockConsoleInterface => {
   const logHandler = (...args: LoggableValue[]): void => {
     logs.push(args.map((arg) => safeStringify(arg)).join(" "));
