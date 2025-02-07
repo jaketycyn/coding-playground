@@ -1,8 +1,5 @@
-import {
-  LeetCodeProblem,
-  ProblemMetadata,
-  Solution,
-} from "../types/leetcode.types";
+import { LeetCodeProblem, ProblemMetadata, Solution } from "./types/leetcode";
+
 import fs from "fs/promises";
 import path from "path";
 
@@ -63,13 +60,13 @@ export async function getProblemsList(): Promise<LeetCodeProblem[]> {
 
     const problems = await Promise.all(
       problemDirs
-        // Skip template directors
+        // Skip template directories
         .filter((dir) => !EXCLUDED_DIRECTORIES.includes(dir))
         .map(async (dir) => {
           try {
             const problemPath = path.join(contentDir, dir);
 
-            // Rest of your existing validation logic...
+            //  validation logic
             const stats = await fs.stat(problemPath);
             if (!stats.isDirectory()) {
               console.log(`Skipping ${dir} - not a directory`);

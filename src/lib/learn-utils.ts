@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import { markdownToHtml } from "./mdx-utils";
+import matter from "gray-matter";
 
 export interface LearningArticle {
   title: string;
@@ -25,25 +26,20 @@ export async function getLearningArticle(
     const articlePath = path.join(contentDir, `${articleId}.md`);
 
     // Read the markdown file
-    const content = await fs.readFile(articlePath, "utf-8");
-
-    // Split the content into frontmatter and body if it exists
-    const [, frontmatter, body] = content.match(
-      /^---\n([\s\S]*?)\n---\n([\s\S]*)$/
-    ) || [null, "", content];
-
-    // Parse frontmatter if it exists
-    const metadata = frontmatter ? parseFrontmatter(frontmatter) : {};
+    const fileContent = await fs.readFile(articlePath, "utf-8");
+    // Parse frontmatter and content
+    const { data: metadata, content: markdownContent } = matter(fileContent);
 
     // Convert markdown content to HTML
-    const processedContent = await markdownToHtml(body);
+    const processedContent = await markdownToHtml(fileContent);
 
     return {
       title: metadata.title || articleId,
-      content: processedContent,
+      content: markdownContent,
       metadata: {
-        datePublished: metadata.datePublished,
-        category: metadata.category,
+        datePublished: metadata.created,
+        category: metadata.categories?.[0],
+        ...metadata, // Include all other metadata
       },
     };
   } catch (error) {
