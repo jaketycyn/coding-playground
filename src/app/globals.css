@@ -88,4 +88,13 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Customize typogrpahy styles */
+  .prose strong {
+    @apply text-orange-500 font-bold;
+  }
+
+  .prose em {
+    @apply text-yellow-400;
+  }
 }
