@@ -1,15 +1,17 @@
 ---
-id: binary-search
-title: "Binary Search: A Deep Dive"
-description: "Understanding the binary search algorithm, its implementation, and common variations"
+id: graph-theory-basics
+title: "Graph Theory Fundamentals"
+description: "Understanding graph representations, traversal algorithms, and basic graph problems"
 categories:
   - algorithms
-  - searching
-  - divide-and-conquer
+  - graph-theory
+  - data-structures
 status: published
-created: "2025-01-15T08:00:00Z"
-lastUpdated: "2025-02-01T14:30:00Z"
+created: "2025-01-25T09:30:00Z"
+lastUpdated: "2025-02-07T11:20:00Z"
 ---
+
+# Graph Theory Fundamentals
 
 # Binary Search: A Deep Dive
 
@@ -29,7 +31,8 @@ Binary search works by repeatedly dividing the search space in half. Given a sor
 
 Here's a basic implementation in TypeScript:
 
-```typescript
+```ts
+// some comment
 function binarySearch(arr: number[], target: number): number {
   let left = 0;
   let right = arr.length - 1;
