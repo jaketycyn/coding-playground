@@ -1,13 +1,13 @@
 import { getProblemsList } from "@/lib/problems";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "../_components/shared/Badges";
 import NewProblemForm from "./_components/NewProblemForm";
+import { ProblemCard } from "./_components/ProblemCard";
 
 export default async function LeetCodePage() {
   // get leet code problems
   const problems = await getProblemsList();
 
+  console.log("problems", problems);
   return (
     <div className="max-w-5xl mx-auto p-6">
       {/* Header */}
@@ -24,26 +24,7 @@ export default async function LeetCodePage() {
         {/* Problems list */}
         {problems.map((problem) => (
           <Link key={problem.id} href={`/leetcode/${problem.id}`}>
-            {/* Card component later */}
-            <Card className="rounded-xl bg-slate-800 hover:bg-slate-700 transition-colors duration-200 overflow-hidden">
-              <CardHeader className="flex items-center justify-between">
-                <CardTitle>
-                  <span className="mr-2">#{problem.problemNumber}</span>
-                  {problem.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-slate-300 flex items-center justify-center ">
-                {problem.categories.map((category) => (
-                  <Badge
-                    key={category}
-                    variant="outline"
-                    className="text-white mx-1 "
-                  >
-                    {category}
-                  </Badge>
-                ))}
-              </CardContent>
-            </Card>
+            <ProblemCard problem={problem} />
           </Link>
         ))}
       </div>
