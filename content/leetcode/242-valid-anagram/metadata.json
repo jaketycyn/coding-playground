@@ -1,0 +1,16 @@
+{
+  "id": "242-valid-anagram",
+  "title": "Valid Anagram",
+  "difficulty": "Easy",
+  "problemNumber": 242,
+  "categories": [
+    "someCategory",
+    "someOtherCategory"
+  ],
+  "timeComplexity": "O(n)",
+  "spaceComplexity": "O(n)",
+  "timestamps": {
+    "created": "2025-02-19T07:08:18.918Z",
+    "lastUpdated": "2025-02-19T07:08:18.918Z"
+  }
+}
