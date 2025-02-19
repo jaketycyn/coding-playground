@@ -1,0 +1,13 @@
+{
+  "id": "49-group-anagrams",
+  "title": "Group Anagrams",
+  "difficulty": "Medium",
+  "problemNumber": 49,
+  "categories": ["Array", "Hash Table", "String", "Sorting"],
+  "timeComplexity": "O(n * k * log k) ",
+  "spaceComplexity": "0(n*k)",
+  "timestamps": {
+    "created": "2025-02-19T07:07:51.835Z",
+    "lastUpdated": "2025-02-19T07:07:51.835Z"
+  }
+}
